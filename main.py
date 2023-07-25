@@ -8,6 +8,7 @@ from option import get_args
 
 csv_path = "./online_retail_II.csv"
 json_path = "./prob_dict.json"
+model_path = "./model.pkl"
 num_top = 5
 
 def first_step_clean(df):
@@ -24,12 +25,9 @@ def first_step_clean(df):
     df = df.drop(df[df["Invoice"].str.contains("^[a-zA-Z]", regex=True)].index)
     # 6. only keep rows with stock code starting with 5 digits
     df = df[df["StockCode"].str.contains("^[0-9]{5}", regex=True)]
-    # 7. drop rows with nan values
-    df = df.dropna()
-    # 8. convert InvoiceDate to datetime
+
+    # 7. convert InvoiceDate to datetime
     df["InvoiceDate"] = pd.to_datetime(df["InvoiceDate"])
-    # convert CustomerID to int
-    df["Customer ID"] = df["Customer ID"].astype(int)
 
     return df
 
@@ -103,11 +101,11 @@ def basket_analyse(df):
 
         return prob_dict
 
-
+def return_analyse(df):
+    pass
 
 if __name__=="__main__":
     args = get_args()
-
     if args.basket:
         if not os.path.exists(json_path):
             """load data"""
@@ -118,8 +116,16 @@ if __name__=="__main__":
         else:
             with open(json_path, 'r') as fp:
                 prob_dict = json.load(fp)
-        show_top(prob_dict, "82482", num=num_top) # show top 5 products with highest probability for product 82482
+        show_top(prob_dict, args.product, num=args.top) # show top 5 products with highest probability for product 82482
+    elif args.returning:
+        if not os.path.exists(model_path):
+            """load data"""
+            df = pd.read_csv(csv_path)
 
+            """returning customer analyse"""
+            return_analyse(df)
+        else:
+            pass
     else:
         print("Please use choose a working mode")
         print("python main.py -h to see more info")
