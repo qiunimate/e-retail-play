@@ -60,10 +60,12 @@ After some cleaning, the input of the data contains:
 - the sum of costs in the last quarter
 - mean of costs per invoice in the last quarter
 - The quarter of the training data (one hot encoded)
-- types contained in the training data (binary encoded)
+- types of product contained in the training data (binary encoded)
 - number of types
 
 Notably, the latest month is not taken into account because there is no data for the following month. The number of data on label 1 is a little bit more than on label 0, a simple downsampling was taken to balance the dataset.
+
+At the first time, the types of product was not on the list, since the performance was not satisfying, I wanted to add more features to the training data, which is why I added it to the list.
 
 ### Difficulties
 2 models (random forest and xgboost) were tried to do this prediction, the default versions did not give us satisfying results, so I started hyperparameter tuning. But when trees go deeper, overfitting shows up. To solve that, I tried to do K-fold validation and reset the min_samples_leaf. 
